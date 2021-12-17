@@ -53,16 +53,16 @@ static function bool IsStealSparkChainAvailable(XComGameState NewGameState)
 	}	
 
 	if (bCanBuildSparks)
-	{		
-        foreach XComHQ.Crew(UnitRef)
-        {
-            Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
+	{
+		foreach XComHQ.Crew(UnitRef)
+		{
+			Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
 
-	        if (Unit != none && Unit.GetSoldierClassTemplateName() == 'Spark')
-            {
-                iCount++;
-            }
-        }
+			if (Unit != none && Unit.GetSoldierClassTemplateName() == 'Spark')
+			{
+				iCount++;
+			}
+		}
 
 		if (iCount < default.SparkLimit)
 		{
