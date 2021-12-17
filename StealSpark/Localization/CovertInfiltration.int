@@ -1,0 +1,9 @@
+[TRActivity_InvestigateSpark X2ActivityTemplate_CovertAction]
+strOverviewDescription="Investigate ADVENT's SPARK"
+
+[TRActivity_HeistSpark X2ActivityTemplate_CovertAction]
+strOverviewDescription="Steal SPARK"
+
+[TRActivityChain_StealSpark X2ActivityChainTemplate]
+strTitle="SPARK Heist"
+strDescription="Investigate rumor about ADVENT's SPARK and analyze feasibility for a heist"
