@@ -92,7 +92,7 @@ static function StateObjectReference CreateSparkSoldier(XComGameState NewGameSta
 	NewSparkState.ApplyInventoryLoadout(NewGameState);
 
 	// Rank ups
-	NewRank = GetPersonnelRewardRank(true, false);
+	NewRank = GetPersonnelRewardRank(true, false);	
 	NewSparkState.SetXPForRank(NewRank);
 	NewSparkState.StartingRank = NewRank;
 
