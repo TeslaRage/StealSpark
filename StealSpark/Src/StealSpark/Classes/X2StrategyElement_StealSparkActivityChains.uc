@@ -1,6 +1,7 @@
 class X2StrategyElement_StealSparkActivityChains extends X2StrategyElement_DefaultActivityChains;
 
 var config (StealSpark) int SparkLimit;
+var config (StealSpark) array<name> BuildSparkTechs;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -35,7 +36,9 @@ static function bool IsStealSparkChainAvailable(XComGameState NewGameState)
 	local XComGameState_HeadquartersXCom XComHQ;
 	local StateObjectReference UnitRef;
 	local XComGameState_Unit Unit;
-	local bool bCanBuildSparks;
+	local XComGameState_HeadquartersProjectProvingGround HQProject;
+	local XComGameState_Tech Tech;
+	local bool bCanBuildSparks, bBuildingSpark;
 	local int iCount;
 
 	// Only 1 at a time, else we can spawn one while the previous is still in progress, thus violating the count rules
@@ -50,9 +53,24 @@ static function bool IsStealSparkChainAvailable(XComGameState NewGameState)
 	else if (XComHQ.IsTechResearched('MechanizedWarfare'))
 	{
 		bCanBuildSparks = true;
-	}	
+	}
 
-	if (bCanBuildSparks)
+	// We should check if there is an on-going project to build/resurrect Sparks
+	HQProject = XComHQ.GetCurrentProvingGroundProject();
+
+	if (HQProject != none)
+	{
+		Tech = XComGameState_Tech(`XCOMHISTORY.GetGameStateForObjectID(HQProject.ProjectFocus.ObjectID));
+		if (Tech != none)
+		{
+			if (default.BuildSparkTechs.Find(Tech.GetMyTemplateName()) != INDEX_NONE)
+			{
+				bBuildingSpark = true;
+			}
+		}
+	}
+
+	if (bCanBuildSparks && !bBuildingSpark)
 	{
 		foreach XComHQ.Crew(UnitRef)
 		{
