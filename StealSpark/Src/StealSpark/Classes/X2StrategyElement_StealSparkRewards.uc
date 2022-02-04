@@ -78,11 +78,15 @@ static function StateObjectReference CreateSparkSoldier(XComGameState NewGameSta
 	// Create the necessary Spark Equipments 
 	class'X2Helpers_DLC_Day90'.static.CreateSparkEquipment(NewGameState);	
 
-	FacilityState = XComHQ.GetFacilityByName('Storage');
-	if (FacilityState != none && FacilityState.GetNumLockedStaffSlots() > 0)
+	// Let's not break [WOTC] Expanded ROBOTICS Repair Facility v3
+	if (!class'X2DownloadableContentInfo_StealSpark'.static.IsModActive('WOTC_MoreEngineeringRepairSlots'))
 	{
-		// Unlock the Repair SPARK staff slot in Engineering
-		FacilityState.UnlockStaffSlot(NewGameState);
+		FacilityState = XComHQ.GetFacilityByName('Storage');
+		if (FacilityState != none && FacilityState.GetNumLockedStaffSlots() > 0)
+		{
+			// Unlock the Repair SPARK staff slot in Engineering
+			FacilityState.UnlockStaffSlot(NewGameState);
+		}
 	}
 
 	// Create a Spark from the Character Pool (will be randomized if no Sparks have been created)

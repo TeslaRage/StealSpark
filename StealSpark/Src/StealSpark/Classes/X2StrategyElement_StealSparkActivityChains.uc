@@ -2,6 +2,7 @@ class X2StrategyElement_StealSparkActivityChains extends X2StrategyElement_Defau
 
 var config (StealSpark) int SparkLimit;
 var config (StealSpark) array<name> BuildSparkTechs;
+var config (StealSpark) array<name> SparkCharacters;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -76,7 +77,7 @@ static function bool IsStealSparkChainAvailable(XComGameState NewGameState)
 		{
 			Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
 
-			if (Unit != none && Unit.GetSoldierClassTemplateName() == 'Spark')
+			if (Unit != none && default.SparkCharacters.Find(Unit.GetMyTemplateName()) != INDEX_NONE)
 			{
 				iCount++;
 			}
