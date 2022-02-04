@@ -7,6 +7,7 @@
     <SteamPublishID>0</SteamPublishID>
     <AssemblyName>StealSpark</AssemblyName>
     <RootNamespace>StealSpark</RootNamespace>
+    <ProjectGuid>{8e508bc4-f77c-47fa-841c-77ecbe7c7c6e}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Config\" />
