@@ -35,17 +35,40 @@ static function X2DataTemplate CreateStealSparkTemplate()
 static function bool IsStealSparkChainAvailable(XComGameState NewGameState)
 {
 	local XComGameState_HeadquartersXCom XComHQ;
-	local StateObjectReference UnitRef;
+	local StateObjectReference UnitRef, FacilityRef;
 	local XComGameState_Unit Unit;
 	local XComGameState_HeadquartersProjectProvingGround HQProject;
 	local XComGameState_Tech Tech;
-	local bool bCanBuildSparks, bBuildingSpark;
+	local XComGameStateHistory History;
+	local XComGameState_FacilityXCom Facility;
+	local bool bCanBuildSparks, bBuildingSpark, bProvingGroundBuilt;
 	local int iCount;
 
 	// Only 1 at a time, else we can spawn one while the previous is still in progress, thus violating the count rules
 	if (DoesActiveChainExist('TRActivityChain_StealSpark', NewGameState)) return false;
 
+	History = `XCOMHISTORY;
 	XComHQ = `XCOMHQ;
+
+	// Check for Proving Ground. If none is built yet, forget it - return false
+	foreach XComHQ.Facilities(FacilityRef)
+	{
+		Facility = XComGameState_FacilityXCom(History.GetGameStateForObjectID(FacilityRef.ObjectID));
+		
+		if (Facility != none)
+		{
+			if (Facility.GetMyTemplateName() == 'ProvingGround')
+			{
+				bProvingGroundBuilt = true;
+				break;
+			}
+		}
+	}
+
+	if (!bProvingGroundBuilt)
+	{
+		return false;
+	}
 
 	if (class'X2Helpers_DLC_Day90'.static.IsLostTowersNarrativeContentComplete())
 	{
@@ -61,7 +84,7 @@ static function bool IsStealSparkChainAvailable(XComGameState NewGameState)
 
 	if (HQProject != none)
 	{
-		Tech = XComGameState_Tech(`XCOMHISTORY.GetGameStateForObjectID(HQProject.ProjectFocus.ObjectID));
+		Tech = XComGameState_Tech(History.GetGameStateForObjectID(HQProject.ProjectFocus.ObjectID));
 		if (Tech != none)
 		{
 			if (default.BuildSparkTechs.Find(Tech.GetMyTemplateName()) != INDEX_NONE)
@@ -75,7 +98,7 @@ static function bool IsStealSparkChainAvailable(XComGameState NewGameState)
 	{
 		foreach XComHQ.Crew(UnitRef)
 		{
-			Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
+			Unit = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
 
 			if (Unit != none && default.SparkCharacters.Find(Unit.GetMyTemplateName()) != INDEX_NONE)
 			{
